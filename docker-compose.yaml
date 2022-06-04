@@ -1,0 +1,27 @@
+version: "3"
+
+# More info: https://vectops.com/2022/02/deploy-pihole-in-your-nas-via-docker/
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    mem_limit: 1024m
+    mem_reservation: 512m
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8080:80/tcp"
+    environment:
+      TZ: 'Europe/Madrid'
+      DNSMASQ_USER: 'root'
+      #WEBPASSWORD: 'xxxxx'
+    # Volumes store your data between container upgrades
+    volumes:
+       - './etc-pihole/:/etc/pihole/'
+       - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
